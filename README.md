@@ -10,7 +10,7 @@ An Android application that offer a basic note app using:
 
 ## **Architecture**
 
-![TSNote architecture](https://raw.githubusercontent.com/vsebastianvc/TSNote/finish_part1/.github/Architecture_Graph.png)
+<img src="https://raw.githubusercontent.com/vsebastianvc/TSNote/finish_part1/.github/architecture_graph.png" width=60%>
 
 ## **Prerequisites**
 - Kotlin
@@ -30,12 +30,14 @@ sdk.dir=/Users/<YOUR_USER_NAME>/Library/Android/sdk
 ```
 
 ## **Setting up the device**
-- you have two options
+#### There are two options
 1. [Create an emulator](https://developer.android.com/studio/run/managing-avds#createavd)
 2. [Set up hardware device](https://developer.android.com/studio/run/device)
 
-**Minimum SDK version supported by this project is SDK 26 (Oreo)**
+###### **Minimum SDK version supported by this project is SDK 26 (Oreo)**
 
 ## **Running on an Android Emulator:**
 
-- Select the desired variant, hit green `Run` button, and have fun :) 
+- Select the desired variant, hit green `Run` button. You should now see the following screen 👇🏻
+
+<img src="https://raw.githubusercontent.com/vsebastianvc/TSNote/finish_part1/.github/finish_app.png" width=30%>
