@@ -30,11 +30,43 @@ import com.vsebastianvc.tsnote.components.NoteInputText
 import com.vsebastianvc.tsnote.model.Note
 import com.vsebastianvc.tsnote.utils.formatDate
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainScreen(
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
+    Scaffold(topBar = {
+        TopAppBar(title = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_ts),
+                    contentDescription = "TS",
+                    tint = Color.Unspecified
+                )
+            }
+        }
+        )
+    }) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CreateNote(mainViewModel = mainViewModel)
+            Divider(modifier = Modifier.padding(10.dp), thickness = 2.dp)
+            NoteList(mainViewModel = mainViewModel)
+        }
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun CreateNote(mainViewModel: MainViewModel) {
 
     var title by remember {
         mutableStateOf("")
@@ -51,91 +83,67 @@ fun MainScreen(
 
     val toastMessage = stringResource(R.string.note_added)
 
-    Column(modifier = Modifier.padding(6.dp)) {
-        TopAppBar(title = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 10.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_ts),
-                    contentDescription = "TS",
-                    tint = Color.Unspecified
+    NoteInputText(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        text = title,
+        label = stringResource(R.string.title),
+        onTextChange = {
+            if (it.all { char ->
+                    char.isLetter() || char.isWhitespace()
+                }) title = it
+
+        })
+
+    NoteInputText(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        text = description,
+        label = stringResource(R.string.add_a_note),
+        onTextChange = {
+            if (it.all { char ->
+                    char.isDefined()
+                }) description = it
+        })
+
+    NoteButton(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        text = stringResource(R.string.save),
+        onClick = {
+            if (title.isNotEmpty() && description.isNotEmpty()) {
+                mainViewModel.addNote(
+                    Note(
+                        title = title,
+                        description = description
+                    )
                 )
+                title = ""
+                description = ""
+                keyboardController?.hide()
+                focusManager.clearFocus()
+
+                Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+            }
+        })
+}
+
+@Composable
+fun NoteList(mainViewModel: MainViewModel) {
+    val noteList = mainViewModel.getAllNotes()
+    if (noteList.isEmpty()) {
+        EmptyNoteListScreen()
+    } else {
+        LazyColumn {
+            items(noteList) { noteItem ->
+                NoteRow(note = noteItem, onNoteClicked = {
+                    mainViewModel.removeNote(noteItem)
+                })
             }
         }
-        )
-
-
-        //Content
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            NoteInputText(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                text = title,
-                label = stringResource(R.string.title),
-                onTextChange = {
-                    if (it.all { char ->
-                            char.isLetter() || char.isWhitespace()
-                        }) title = it
-
-                })
-
-            NoteInputText(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                text = description,
-                label = stringResource(R.string.add_a_note),
-                onTextChange = {
-                    if (it.all { char ->
-                            char.isDefined()
-                        }) description = it
-                })
-
-            NoteButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                text = stringResource(R.string.save),
-                onClick = {
-                    if (title.isNotEmpty() && description.isNotEmpty()) {
-                        mainViewModel.addNote(
-                            Note(
-                                title = title,
-                                description = description
-                            )
-                        )
-                        title = ""
-                        description = ""
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-
-                        Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
-                    }
-                })
-        }
-
-        Divider(modifier = Modifier.padding(10.dp), thickness = 2.dp)
-        val noteList = mainViewModel.getAllNotes()
-        if (noteList.isEmpty()) {
-            EmptyNoteListScreen()
-        } else {
-            LazyColumn {
-                items(noteList) { noteItem ->
-                    NoteRow(note = noteItem, onNoteClicked = {
-                        mainViewModel.removeNote(noteItem)
-                    })
-                }
-            }
-        }
-
     }
 }
 
@@ -147,7 +155,7 @@ fun NoteRow(
 ) {
     Surface(
         modifier
-            .padding(4.dp)
+            .padding(horizontal = 10.dp, vertical = 5.dp)
             .clip(RoundedCornerShape(topEnd = 33.dp, bottomStart = 33.dp))
             .fillMaxWidth(),
         color = MaterialTheme.colors.surface,
