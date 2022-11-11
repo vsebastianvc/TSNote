@@ -30,11 +30,11 @@ sdk.dir=/Users/<YOUR_USER_NAME>/Library/Android/sdk
 ```
 
 ## **Setting up the device**
-#### There are two options
+#### There are two options*
 1. [Create an emulator](https://developer.android.com/studio/run/managing-avds#createavd)
 2. [Set up hardware device](https://developer.android.com/studio/run/device)
 
-###### **Minimum SDK version supported by this project is SDK 26 (Oreo)**
+###### ***Minimum SDK version supported by this project is SDK 26 (Oreo)**
 
 ## **Running on an Android Emulator:**
 
