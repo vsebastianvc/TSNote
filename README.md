@@ -10,7 +10,7 @@ An Android application that offer a basic note app using:
 
 ## **Architecture**
 
-- TODO
+![TSNote architecture](https://raw.githubusercontent.com/vsebastianvc/TSNote/finish_part1/.github/Architecture_Graph.png)
 
 ## **Prerequisites**
 - Kotlin
